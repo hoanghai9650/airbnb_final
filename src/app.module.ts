@@ -14,6 +14,9 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthMiddleware } from './middleWare/auth.middlewaret';
 import { Room } from './entity/Room';
+import { RoomModule } from './room/room.module';
+import { Location } from './entity/Location';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -25,12 +28,14 @@ import { Room } from './entity/Room';
       username: 'root',
       password: '1234',
       database: 'airbnb_database',
-      entities: [User, Room],
+      entities: [User, Room, Location],
       synchronize: true,
       migrations: ['dist/migrations/*.js'],
     }),
     AuthModule,
     UserModule,
+    RoomModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

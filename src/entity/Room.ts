@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './User';
+import { Location } from './Location';
 
 @Entity()
 export class Room {
@@ -61,9 +62,19 @@ export class Room {
   pool: boolean;
 
   @Column('mediumtext', { name: 'image', nullable: true })
-  image: boolean;
+  image: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.room)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
+
+  @ManyToOne(() => Location, (location) => location.room)
+  @JoinColumn({ name: 'location_id', referencedColumnName: 'id' })
+  location: Location;
 }
