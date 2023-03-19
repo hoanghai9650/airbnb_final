@@ -51,7 +51,7 @@ export class RoomPayloadDTO {
   pool: boolean;
 
   @ApiProperty({ type: 'number' })
-  locationId: Location;
+  locationId: number;
 
   @ApiProperty({ type: 'string' })
   image: string;

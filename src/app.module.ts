@@ -17,6 +17,10 @@ import { Room } from './entity/Room';
 import { RoomModule } from './room/room.module';
 import { Location } from './entity/Location';
 import { LocationModule } from './location/location.module';
+import { Booking } from './entity/Booking';
+import { BookingModule } from './booking/booking.module';
+import { Comment } from './entity/Comment';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -28,7 +32,7 @@ import { LocationModule } from './location/location.module';
       username: 'root',
       password: '1234',
       database: 'airbnb_database',
-      entities: [User, Room, Location],
+      entities: [User, Room, Location, Booking, Comment],
       synchronize: true,
       migrations: ['dist/migrations/*.js'],
     }),
@@ -36,6 +40,8 @@ import { LocationModule } from './location/location.module';
     UserModule,
     RoomModule,
     LocationModule,
+    BookingModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

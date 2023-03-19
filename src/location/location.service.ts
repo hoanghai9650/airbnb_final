@@ -28,7 +28,10 @@ export class LocationService {
   }
 
   async createLocation(payload: CreateLocationDTO) {
-    const location = this.findLocation(payload.id);
+    const location = await this.locationRepository.findOneBy({
+      id: payload.id,
+    });
+
     if (!!location) {
       failCode({}, 'Location Exist');
     } else {

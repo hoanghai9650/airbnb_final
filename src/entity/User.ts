@@ -8,6 +8,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Room } from './Room';
+import { Booking } from './Booking';
+import { Comment } from './Comment';
 
 @Entity()
 export class User {
@@ -55,4 +57,10 @@ export class User {
 
   @OneToMany(() => Room, (room) => room.user)
   room: Room[];
+
+  @OneToMany(() => Booking, (booking) => booking.user)
+  booking: Booking;
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comment: Comment;
 }
