@@ -7,9 +7,12 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from './User';
 import { Location } from './Location';
+import { Booking } from './Booking';
+import { Comment } from './Comment';
 
 @Entity()
 export class Room {
@@ -64,17 +67,28 @@ export class Room {
   @Column('mediumtext', { name: 'image', nullable: true })
   image: string;
 
+  @Column({ type: 'int', name: 'location_id' })
+  locationId: number;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.room)
+  @ManyToOne(() => User, (user) => user.room, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  @ManyToOne(() => Location, (location) => location.room)
+  @ManyToOne(() => Location, (location) => location.room, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'location_id', referencedColumnName: 'id' })
   location: Location;
+
+  @OneToMany(() => Booking, (booking) => booking.room)
+  booking: Booking;
+
+  @OneToMany(() => Comment, (comment) => comment.room)
+  comment: Comment;
 }

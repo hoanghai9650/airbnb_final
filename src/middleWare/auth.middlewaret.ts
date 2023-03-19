@@ -20,7 +20,10 @@ export class AuthMiddleware implements NestMiddleware {
 
     if (authHeaders && (authHeaders as string).split(' ')[1]) {
       const token = (authHeaders as string).split(' ')[1];
-      const tokenDecode: JwtPayload = jwt_decode(token);
+      const tokenDecode: JwtPayload = jwt_decode(
+        token,
+        this.config.get('SECRET_KEY'),
+      );
 
       if (tokenDecode.exp < Date.now() / 1000) {
         throw new HttpException('Not authorized.', HttpStatus.UNAUTHORIZED);

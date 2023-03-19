@@ -6,11 +6,14 @@ import { RoomPayloadDTO, RoomSearchDTO } from './dto/roomDTO';
 import { notFoundCode, failCode, successCode } from '../utils/response';
 import { paginateResponse } from 'src/utils/paginateResponse';
 import { readFile, unlinkSync } from 'fs';
+import { Location } from 'src/entity/Location';
 
 @Injectable()
 export class RoomService {
   constructor(
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
+    @InjectRepository(Location)
+    private locationRepository: Repository<Location>,
   ) {}
 
   getRoom() {
@@ -27,13 +30,20 @@ export class RoomService {
   }
 
   async createRoom(payload: RoomPayloadDTO) {
-    const room = await this.findRoom(payload.id);
+    const room = await this.roomRepository.findOneBy({ id: payload.id });
+    const location = await this.locationRepository.findOneBy({
+      id: payload.locationId,
+    });
     if (!!room) {
       failCode({}, 'Room already exists');
     } else {
-      const newRoom = this.roomRepository.create(payload);
-      await this.roomRepository.save(newRoom);
-      successCode({}, 'Create Success');
+      if (location) {
+        const newRoom = this.roomRepository.create(payload);
+        await this.roomRepository.save(newRoom);
+        successCode({}, 'Create Success');
+      } else {
+        notFoundCode('Location not found');
+      }
     }
   }
 
