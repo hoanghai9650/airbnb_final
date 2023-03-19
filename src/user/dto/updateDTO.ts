@@ -23,6 +23,13 @@ export class UpdateUserDTO {
   role: string;
 }
 
+export interface UserDTO {
+  name: string;
+  age: number;
+  phoneNumber: number;
+  id: number;
+}
+
 export class CreateUserDTO {
   email: string;
   password: string;

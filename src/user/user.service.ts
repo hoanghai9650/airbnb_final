@@ -6,6 +6,7 @@ import { CreateUserDTO_2, SearchUserDTO, UpdateUserDTO } from './dto/updateDTO';
 import { notFoundCode } from 'src/utils/response';
 import { successCode, failCode } from '../utils/response';
 import { paginateResponse } from 'src/utils/paginateResponse';
+import { readFile, unlinkSync } from 'fs';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,7 @@ export class UserService {
     if (findUser) {
       return findUser;
     } else {
-      return notFoundCode('User not found');
+      notFoundCode('User not found');
     }
   }
 
@@ -32,7 +33,7 @@ export class UserService {
       await this.userRepository.update({ id }, { ...body });
       successCode(null, 'Updated successfully');
     } else {
-      return notFoundCode('User not found');
+      notFoundCode('User not found');
     }
   }
 
@@ -45,7 +46,7 @@ export class UserService {
 
       successCode(null, 'Updated successfully');
     } else {
-      return notFoundCode('User not found');
+      notFoundCode('User not found');
     }
   }
 
@@ -55,7 +56,7 @@ export class UserService {
       await this.userRepository.delete({ id });
       successCode(null, 'Deleted successfully');
     } else {
-      return notFoundCode('User not found');
+      notFoundCode('User not found');
     }
   }
 
@@ -85,7 +86,16 @@ export class UserService {
     }
   }
 
-  async uploadAvatar(fileName: string, userId: number) {
-    await this.userRepository.update({ id: userId }, { avatar: fileName });
+  async uploadAvatar(file: Express.Multer.File, userId: number) {
+    readFile(
+      process.cwd() + '/public/img/' + file.filename,
+      async (err, data) => {
+        const fileName = `"data: ${file.mimetype}; base64, ${Buffer.from(
+          data,
+        ).toString('base64')}"`;
+        unlinkSync(process.cwd() + '/public/img/' + file.filename);
+        await this.userRepository.update({ id: userId }, { avatar: fileName });
+      },
+    );
   }
 }
